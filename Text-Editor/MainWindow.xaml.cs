@@ -10,6 +10,7 @@ using ICSharpCode.AvalonEdit.Search;
 using System.Text.Json;
 using Text_Editor.Data;
 using Text_Editor.Data.Encrypt;
+using System.Security.Cryptography;
 
 namespace Text_Editor
 {
@@ -152,18 +153,31 @@ namespace Text_Editor
 
         public void OpenFile(string filePath)
         {
-            var jsonString = File.ReadAllText("aesKeyInfo.json");
-            var config = JsonSerializer.Deserialize<DecryptKeys>(jsonString);
+            try
+            {
+                var jsonString = File.ReadAllText("aesKeyInfo.json");
+                var config = JsonSerializer.Deserialize<DecryptKeys>(jsonString);
 
-            var aes = new AES();
-            var text = Convert.FromBase64String(File.ReadAllText(filePath));
-            var decText = aes.Decrypt(text, config.Key, config.IV);
+                var aes = new AES();
+                var text = Convert.FromBase64String(File.ReadAllText(filePath));
+                var decText = aes.Decrypt(text, config.Key, config.IV);
 
-            TxtBoxDoc.Text = decText;
-            _fileName = filePath;
-            this.Title = "PTE - Private Text Editor - " + Path.GetFileName(_fileName);
-            DetectSyntaxAndChange();
-            _hasTextChanged = false;
+                TxtBoxDoc.Text = decText;
+                _fileName = filePath;
+                this.Title = "PTE - Private Text Editor - " + Path.GetFileName(_fileName);
+                DetectSyntaxAndChange();
+                _hasTextChanged = false;
+            }
+            catch (CryptographicException)
+            {
+                MessageBox.Show("Wrong AES key, decrypt failed.", "AES Key Error", MessageBoxButton.OK);
+                return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error just occurred: " + ex.Message, "Open File Error", MessageBoxButton.OK);
+                return;
+            }
         }
 
         private void MenuSave_Click(object sender, RoutedEventArgs e)

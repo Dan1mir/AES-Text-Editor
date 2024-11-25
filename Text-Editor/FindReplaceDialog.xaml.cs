@@ -1,4 +1,5 @@
-﻿using System.Media;
+﻿using System;
+using System.Media;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
@@ -50,13 +51,13 @@ namespace Text_Editor
         private void FindNextClick(object sender, RoutedEventArgs e)
         {
             if (!FindNext(txtFind.Text))
-                SystemSounds.Beep.Play();
+                Console.Beep();
         }
 
         private void FindNext2Click(object sender, RoutedEventArgs e)
         {
             if (!FindNext(txtFind2.Text))
-                SystemSounds.Beep.Play();
+                 Console.Beep();
         }
 
         private void ReplaceClick(object sender, RoutedEventArgs e)
@@ -72,7 +73,7 @@ namespace Text_Editor
             }
 
             if (!FindNext(txtFind2.Text) && !replaced)
-                SystemSounds.Beep.Play();
+                Console.Beep();
         }
 
         private void ReplaceAllClick(object sender, RoutedEventArgs e)
