@@ -29,7 +29,6 @@ namespace Text_Editor
         public MainWindow()
         {
             InitializeComponent();
-            TxtBoxDoc.FontSize = 14;
             if (!Properties.Settings.Default.Started)
             {
                 var aes = new AES();
@@ -38,6 +37,7 @@ namespace Text_Editor
                 SaveToFile(key, iv, "aesKeyInfo.json");
                 
                 Properties.Settings.Default.Started = true;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -72,7 +72,7 @@ namespace Text_Editor
 
         private void NewFile()
         {
-            this.Title = "PTE - Private Text Editor";
+            Title = "PTE - Private Text Editor";
             _fileName = "";
             _hasTextChanged = false;
         }
@@ -164,7 +164,7 @@ namespace Text_Editor
 
                 TxtBoxDoc.Text = decText;
                 _fileName = filePath;
-                this.Title = "PTE - Private Text Editor - " + Path.GetFileName(_fileName);
+                Title = "PTE - Private Text Editor - " + Path.GetFileName(_fileName);
                 DetectSyntaxAndChange();
                 _hasTextChanged = false;
             }
@@ -201,6 +201,7 @@ namespace Text_Editor
             if (File.Exists(_fileName) && !saveAs)
             {
                 File.WriteAllText(_fileName, Convert.ToBase64String(encText));
+                FileSaved();
                 return;
             }
 
@@ -210,8 +211,8 @@ namespace Text_Editor
             {
                 File.WriteAllText(saveDlg.FileName, Convert.ToBase64String(encText));
                 _fileName = saveDlg.FileName;
-                this.Title = "PTE - Private Text Editor - " + _fileName.Substring(_fileName.LastIndexOf('\\') + 1);
-                _hasTextChanged = false;
+                Title = "PTE - Private Text Editor - " + _fileName.Substring(_fileName.LastIndexOf('\\') + 1);
+                FileSaved();
                 DetectSyntaxAndChange();
             }
         }
@@ -235,8 +236,17 @@ namespace Text_Editor
         private void TxtBoxDoc_TextChanged(object sender, EventArgs e)
         {
             _hasTextChanged = true;
-            if (this.Title[this.Title.Length - 1] != '*')
-                this.Title += '*';
+            if (Title[Title.Length - 1] != '*')
+                Title += '*';
+        }
+
+        private void FileSaved()
+        {
+            if (Title.EndsWith("*"))
+            {
+                Title = Title.TrimEnd('*');
+                _hasTextChanged = false;
+            }
         }
 
         private void MenuExit_Click(object sender, RoutedEventArgs e)

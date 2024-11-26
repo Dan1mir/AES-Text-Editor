@@ -122,7 +122,7 @@
         </ToolBarTray>
 
         <avalonedit:TextEditor
-            x:Name="TxtBoxDoc" FontFamily="Consolas" FontSize="10pt" DockPanel.Dock="Bottom"
+            x:Name="TxtBoxDoc" FontFamily="Consolas" FontSize="10.5pt" DockPanel.Dock="Bottom"
                                VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                                TextChanged="TxtBoxDoc_TextChanged"
                                ShowLineNumbers="False" AllowDrop="True" Drop="TxtBoxDoc_Drop">
