@@ -16,4 +16,5 @@ The code is not entirely mine; I use [this code](https://github.com/NetkoNefario
    - These encrypted files can only be opened with this text editor.
 
 ## File sharing
-  If you want to share encrypted file with someone, you need to send the encrypted file itself and `aesKeyInfo.json` file from main directory. Just drop keyInfo file in the main directory and open the encrypted file.
+   If you want to share encrypted file with someone, you need to send the encrypted file itself and `aesKeyInfo.json` file from main directory or your own file with encryption keys. 
+   You can use the "Set Encrypt Key" button to use multiple encryption keys.
