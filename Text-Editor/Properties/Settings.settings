@@ -11,5 +11,14 @@
     <Setting Name="Started" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="Key" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">q9pAAXojqKRkllj0pdz29UPagtSTO5kSVk9v7ruJvbQ=</Value>
+    </Setting>
+    <Setting Name="IV" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">A12AYnJG4B8SYLLwN5OLTA==</Value>
+    </Setting>
+    <Setting Name="aesEncryptPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">aesKeyInfo.json</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

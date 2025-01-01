@@ -8,7 +8,7 @@
         Title="About" Height="250" Width="300" ResizeMode="NoResize">
     <Grid>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0">
-            <TextBlock Text="Private Text Editor" HorizontalAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" FontSize="24"/>
+            <TextBlock Text="AES Text Editor" HorizontalAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" FontSize="24"/>
         </StackPanel>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,80,10,0">
             <TextBlock 
@@ -16,6 +16,6 @@
                 TextWrapping="Wrap" 
                 FontSize="14"/>
         </StackPanel>
-        <Label Content="Ver 0.1.2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15"/>
+        <Label Content="Ver 0.1a" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15"/>
     </Grid>
 </Window>

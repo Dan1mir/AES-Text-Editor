@@ -11,6 +11,7 @@ using System.Text.Json;
 using Text_Editor.Data;
 using Text_Editor.Data.Encrypt;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace Text_Editor
 {
@@ -24,7 +25,7 @@ namespace Text_Editor
         private string _dialogFileTypes = "Text file (*.txt)|*.txt|All files|*.*|C# file (*.cs)|*.cs|C++ file (*.cpp)|*.cpp|" +
                 "HTML file (*.html, *.htm)|*.html;*.htm|Java file (*.java)|*.java|Javascript file (*.js)|*.js|" +
                 "Visual Basic file (*.vb)|*.vb|XML file (*.xml)|*.xml|PHP file (*.php)|*.php";
-
+        private string _jsonFileType = "Json file (*.json)|*.json";
 
         public MainWindow()
         {
@@ -34,7 +35,14 @@ namespace Text_Editor
                 var aes = new AES();
                 var (key, iv) = aes.GenerateKeyIV();
 
-                SaveToFile(key, iv, "aesKeyInfo.json");
+                var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
+                var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
+
+                string json = $"{{\"Key\":\"{Convert.ToBase64String(key)}\",\"IV\":\"{Convert.ToBase64String(iv)}\"}}";
+
+                byte[] encryptedJson = aes.Encrypt(json, encryptkey, encryptiv);
+
+                File.WriteAllBytes("aesKeyInfo.json", encryptedJson);
                 
                 Properties.Settings.Default.Started = true;
                 Properties.Settings.Default.Save();
@@ -72,7 +80,7 @@ namespace Text_Editor
 
         private void NewFile()
         {
-            Title = "PTE - Private Text Editor";
+            Title = "AES Text Editor";
             _fileName = "";
             _hasTextChanged = false;
         }
@@ -155,16 +163,21 @@ namespace Text_Editor
         {
             try
             {
-                var jsonString = File.ReadAllText("aesKeyInfo.json");
-                var config = JsonSerializer.Deserialize<DecryptKeys>(jsonString);
-
                 var aes = new AES();
+
+                var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
+                var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
+
+                var encryptedJson = File.ReadAllBytes(Properties.Settings.Default.aesEncryptPath);
+                var decryptedJson = aes.Decrypt(encryptedJson, encryptkey, encryptiv);
+                var config = JsonSerializer.Deserialize<DecryptKeys>(decryptedJson);
+
                 var text = Convert.FromBase64String(File.ReadAllText(filePath));
                 var decText = aes.Decrypt(text, config.Key, config.IV);
 
                 TxtBoxDoc.Text = decText;
                 _fileName = filePath;
-                Title = "PTE - Private Text Editor - " + Path.GetFileName(_fileName);
+                Title = "AES Text Editor - " + Path.GetFileName(_fileName);
                 DetectSyntaxAndChange();
                 _hasTextChanged = false;
             }
@@ -192,10 +205,15 @@ namespace Text_Editor
 
         private void SaveFile(bool saveAs = false)
         {
-            var jsonString = File.ReadAllText("aesKeyInfo.json");
-            var config = JsonSerializer.Deserialize<DecryptKeys>(jsonString);
-
             var aes = new AES();
+
+            var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
+            var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
+
+            var encryptedJson = File.ReadAllBytes(Properties.Settings.Default.aesEncryptPath);
+            var decryptedJson = aes.Decrypt(encryptedJson, encryptkey, encryptiv);
+            var config = JsonSerializer.Deserialize<DecryptKeys>(decryptedJson);
+
             var encText = aes.Encrypt(TxtBoxDoc.Text, config.Key, config.IV);
 
             if (File.Exists(_fileName) && !saveAs)
@@ -211,7 +229,7 @@ namespace Text_Editor
             {
                 File.WriteAllText(saveDlg.FileName, Convert.ToBase64String(encText));
                 _fileName = saveDlg.FileName;
-                Title = "PTE - Private Text Editor - " + _fileName.Substring(_fileName.LastIndexOf('\\') + 1);
+                Title = "AES Text Editor - " + _fileName.Substring(_fileName.LastIndexOf('\\') + 1);
                 FileSaved();
                 DetectSyntaxAndChange();
             }
@@ -373,5 +391,40 @@ namespace Text_Editor
 
             File.WriteAllText(filePath, jsonString);
         }
+        private void setEncrytKeyPath_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openDlg = new OpenFileDialog
+            {
+                Filter = _jsonFileType,
+                InitialDirectory = File.Exists(_fileName) ?
+                Path.GetDirectoryName(_fileName) :
+                Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+            };
+            if (openDlg.ShowDialog() == true)
+            {
+                setEncryptKey(openDlg.FileName);
+            }
+        }
+        private void setEncryptKey(string path)
+        {
+            Properties.Settings.Default.aesEncryptPath = path;
+            try
+            {
+                var aes = new AES();
+
+                var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
+                var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
+
+                var encryptedJson = File.ReadAllBytes(Properties.Settings.Default.aesEncryptPath);
+                var decryptedJson = aes.Decrypt(encryptedJson, encryptkey, encryptiv);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("File open error. Maybe it's not an AES key file?", "AES Key Error", MessageBoxButton.OK);
+                Properties.Settings.Default.aesEncryptPath = "aesKeyInfo.json";
+                return;
+            }
+        }
+
     }
 }

@@ -58,5 +58,35 @@ namespace Text_Editor.Properties {
                 this["Started"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("q9pAAXojqKRkllj0pdz29UPagtSTO5kSVk9v7ruJvbQ=")]
+        public string Key {
+            get {
+                return ((string)(this["Key"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("A12AYnJG4B8SYLLwN5OLTA==")]
+        public string IV {
+            get {
+                return ((string)(this["IV"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("aesKeyInfo.json")]
+        public string aesEncryptPath {
+            get {
+                return ((string)(this["aesEncryptPath"]));
+            }
+            set {
+                this["aesEncryptPath"] = value;
+            }
+        }
     }
 }
