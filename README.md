@@ -2,7 +2,7 @@
 
 This is a simple text editor written in C# WPF created to explore AES data encryption (and for fun). 
 
-The code is not entirely mine; I use [this code](https://github.com/NetkoNefarious/Text-Editor) as a foundation and added some functionalities.
+The code is not entirely mine; I use [this code](https://github.com/NetkoNefarious/Text-Editor) as a foundation - I added some functionalities, fixed a few bugs, and upgraded it from the .NET Framework(bruh) to .NET 8.
 
 ## How It Works
 
@@ -16,5 +16,5 @@ The code is not entirely mine; I use [this code](https://github.com/NetkoNefario
    - These encrypted files can only be opened with this text editor.
 
 ## File sharing
-   If you want to share encrypted file with someone, you need to send the encrypted file itself and `aesKeyInfo.json` file from main directory or your own file with encryption keys. 
-   You can use the "Set Encrypt Key" button to use multiple encryption keys.
+If you want to share encrypted file with someone, you need to send the encrypted file itself and `aesKeyInfo.json` file from main directory or your own file with encryption keys. 
+You can use the "Set Encrypt Key" button to use multiple encryption keys.
