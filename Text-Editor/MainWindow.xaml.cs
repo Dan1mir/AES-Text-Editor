@@ -32,21 +32,47 @@ namespace Text_Editor
             InitializeComponent();
             if (!Properties.Settings.Default.Started)
             {
-                var aes = new AES();
-                var (key, iv) = aes.GenerateKeyIV();
+                GenerateAES();
 
-                var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
-                var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
-
-                string json = $"{{\"Key\":\"{Convert.ToBase64String(key)}\",\"IV\":\"{Convert.ToBase64String(iv)}\"}}";
-
-                byte[] encryptedJson = aes.Encrypt(json, encryptkey, encryptiv);
-
-                File.WriteAllBytes("aesKeyInfo.json", encryptedJson);
-                
                 Properties.Settings.Default.Started = true;
                 Properties.Settings.Default.Save();
             }
+        }
+
+        private void generateNewKey_Click(object sender, RoutedEventArgs e)
+        {
+            GenerateAES();
+        }
+
+        private void GenerateAES()
+        {
+            var aes = new AES();
+            var (key, iv) = aes.GenerateKeyIV();
+
+            var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
+            var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
+
+            string json = $"{{\"Key\":\"{Convert.ToBase64String(key)}\",\"IV\":\"{Convert.ToBase64String(iv)}\"}}";
+
+            byte[] encryptedJson = aes.Encrypt(json, encryptkey, encryptiv);
+
+            string fileName = GenerateUniqueFileName("aesKeyInfo", ".json");
+
+            File.WriteAllBytes(fileName, encryptedJson);
+        }
+
+        string GenerateUniqueFileName(string baseFileName, string extension)
+        {
+            string fileName = $"{baseFileName}{extension}";
+            int fileIndex = 1;
+
+            while (File.Exists(fileName))
+            {
+                fileName = $"{baseFileName}({fileIndex}){extension}";
+                fileIndex++;
+            }
+
+            return fileName;
         }
 
         private void SaveBeforeClosing_Prompt()
@@ -425,6 +451,7 @@ namespace Text_Editor
                 return;
             }
         }
+
 
     }
 }
