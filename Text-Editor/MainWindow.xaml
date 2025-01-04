@@ -30,7 +30,9 @@
                 <MenuItem x:Name="menuSaveAs" Header="Save as" Click="MenuSaveAs_Click"/>
                 <Separator/>
                 <MenuItem x:Name="setEncrytKeyPath" Header="Set Encrypt Key" Click="setEncrytKeyPath_Click"/>
-                <MenuItem x:Name="generateNewKey" Header="Generate New Key" Click="generateNewKey_Click"/>
+                <MenuItem x:Name="generateNewKey" Header="New Text Encrypt Key" Click="generateNewKey_Click"/>
+                <Separator/>
+                <MenuItem x:Name="generateNewGlobalKey" Header="New Global Encrypt Key" Click="generateNewGlobalKey_Click"/>
                 <Separator/>
                 <MenuItem x:Name="menuExit" Header="Exit" InputGestureText="Alt+F4"
                           Click="MenuExit_Click">

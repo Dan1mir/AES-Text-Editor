@@ -49,8 +49,8 @@ namespace Text_Editor
             var aes = new AES();
             var (key, iv) = aes.GenerateKeyIV();
 
-            var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
-            var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
+            var encryptkey = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.Key));
+            var encryptiv = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.IV));
 
             string json = $"{{\"Key\":\"{Convert.ToBase64String(key)}\",\"IV\":\"{Convert.ToBase64String(iv)}\"}}";
 
@@ -59,6 +59,8 @@ namespace Text_Editor
             string fileName = GenerateUniqueFileName("aesKeyInfo", ".json");
 
             File.WriteAllBytes(fileName, encryptedJson);
+
+            setEncryptKey(fileName);
         }
 
         string GenerateUniqueFileName(string baseFileName, string extension)
@@ -191,8 +193,8 @@ namespace Text_Editor
             {
                 var aes = new AES();
 
-                var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
-                var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
+                var encryptkey = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.Key));
+                var encryptiv = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.IV));
 
                 var encryptedJson = File.ReadAllBytes(Properties.Settings.Default.aesEncryptPath);
                 var decryptedJson = aes.Decrypt(encryptedJson, encryptkey, encryptiv);
@@ -233,8 +235,8 @@ namespace Text_Editor
         {
             var aes = new AES();
 
-            var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
-            var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
+            var encryptkey = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.Key));
+            var encryptiv = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.IV));
 
             var encryptedJson = File.ReadAllBytes(Properties.Settings.Default.aesEncryptPath);
             var decryptedJson = aes.Decrypt(encryptedJson, encryptkey, encryptiv);
@@ -341,8 +343,13 @@ namespace Text_Editor
             TxtBoxDoc.ShowLineNumbers = !TxtBoxDoc.ShowLineNumbers;
             menuLineNumbers.IsChecked = TxtBoxDoc.ShowLineNumbers;
             Properties.Settings.Default.LineNumbers = TxtBoxDoc.ShowLineNumbers;
+            Properties.Settings.Default.Save();
         }
-
+        private void MenuNightMode_OnClick(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.NightMode = !Properties.Settings.Default.NightMode;
+            Properties.Settings.Default.Save();
+        }
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
         {
             SaveBeforeClosing_Prompt();
@@ -382,12 +389,6 @@ namespace Text_Editor
         {
             e.CanExecute = true;
         }
-
-        private void MenuNightMode_OnClick(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.NightMode = !Properties.Settings.Default.NightMode;
-        }
-
         private void TxtBoxDoc_Drop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -438,20 +439,48 @@ namespace Text_Editor
             {
                 var aes = new AES();
 
-                var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
-                var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
+                var encryptkey = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.Key));
+                var encryptiv = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.IV));
 
                 var encryptedJson = File.ReadAllBytes(Properties.Settings.Default.aesEncryptPath);
                 var decryptedJson = aes.Decrypt(encryptedJson, encryptkey, encryptiv);
+                Properties.Settings.Default.Save();
             }
             catch (Exception)
             {
                 MessageBox.Show("File open error. Maybe it's not an AES key file?", "AES Key Error", MessageBoxButton.OK);
                 Properties.Settings.Default.aesEncryptPath = "aesKeyInfo.json";
+                Properties.Settings.Default.Save();
                 return;
             }
         }
+        //Pizdec
+        private void generateNewGlobalKey_Click(object sender, RoutedEventArgs e)
+        {
+            var aes = new AES();
+            var (key, iv) = aes.GenerateKeyIV();
 
+            string ObfIV = ObfuscateString(Convert.ToBase64String(iv));
+            string ObfKey = ObfuscateString(Convert.ToBase64String(key));
 
+            Properties.Settings.Default.IV = ObfIV;
+            Properties.Settings.Default.Key = ObfKey;
+            Properties.Settings.Default.Save();
+        }
+
+        static string ObfuscateString(string input)
+        {
+            StringBuilder obfuscated = new StringBuilder();
+            foreach (char c in input)
+            {
+                obfuscated.Append((char)(c ^ 0x55));
+            }
+            return obfuscated.ToString();
+        }
+
+        static string DeobfuscateString(string input)
+        {
+            return ObfuscateString(input);
+        }
     }
 }
