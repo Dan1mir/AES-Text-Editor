@@ -11,10 +11,10 @@
     <Setting Name="Started" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Key" Type="System.String" Scope="User">
+    <Setting Name="Key" Type="System.String" Scope="Application">
       <Value Profile="(Default)">;`l"&lt;a&#xF;a&#x18;m&#x2;e&#x2;0&#x3;6:`:&#x4;f&#xC;?&#x7;`&#x11;`9&#x4;m&#x4;2&#x7;/`'&#x1E;-'?&#x10;h</Value>
     </Setting>
-    <Setting Name="IV" Type="System.String" Scope="User">
+    <Setting Name="IV" Type="System.String" Scope="Application">
       <Value Profile="(Default)">=9&#xC;&#x11;&#x14;g&#x5; &#x1E;&#x5; </Value>
     </Setting>
     <Setting Name="aesEncryptPath" Type="System.String" Scope="User">

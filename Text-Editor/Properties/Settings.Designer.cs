@@ -59,27 +59,21 @@ namespace Text_Editor.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("\r;`l\"<aame06:`:f?`\r`9m2/`\'-\'?h")]
         public string Key {
             get {
                 return ((string)(this["Key"]));
             }
-            set {
-                this["Key"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("=9g  ")]
         public string IV {
             get {
                 return ((string)(this["IV"]));
-            }
-            set {
-                this["IV"] = value;
             }
         }
         

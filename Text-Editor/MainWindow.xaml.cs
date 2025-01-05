@@ -454,19 +454,6 @@ namespace Text_Editor
                 return;
             }
         }
-        //Pizdec
-        private void generateNewGlobalKey_Click(object sender, RoutedEventArgs e)
-        {
-            var aes = new AES();
-            var (key, iv) = aes.GenerateKeyIV();
-
-            string ObfIV = ObfuscateString(Convert.ToBase64String(iv));
-            string ObfKey = ObfuscateString(Convert.ToBase64String(key));
-
-            Properties.Settings.Default.IV = ObfIV;
-            Properties.Settings.Default.Key = ObfKey;
-            Properties.Settings.Default.Save();
-        }
 
         static string ObfuscateString(string input)
         {
