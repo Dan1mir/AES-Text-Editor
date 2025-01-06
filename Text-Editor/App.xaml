@@ -2,8 +2,15 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Text_Editor"
+             xmlns:p="clr-namespace:Text_Editor.Properties"
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
              Startup="Application_Startup">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Data\Themes\DarkTheme.xaml"/>
+                <ResourceDictionary Source="Data\Themes\LightTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

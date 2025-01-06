@@ -20,5 +20,11 @@ namespace Text_Editor
                 window.OpenFile(e.Args[0]);
             window.Show();
         }
+        public void ChangeTheme(Uri themeUri) 
+        {
+            ResourceDictionary theme = new ResourceDictionary() { Source = themeUri }; 
+            Resources.MergedDictionaries.Clear(); 
+            Resources.MergedDictionaries.Add(theme); 
+        }
     }
 }

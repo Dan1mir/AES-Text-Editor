@@ -83,7 +83,7 @@
         </Menu>
 
         <ToolBarTray DockPanel.Dock="Top">
-            <ToolBar>
+            <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
                 <Button ToolTip="New" Click="MenuNew_Click">
                     <Image Source="./Resources/New.png"/>
                 </Button>
@@ -95,12 +95,11 @@
                 </Button>
                 <Separator/>
                 <Label Content="Font size:"/>
-                <ComboBox x:Name="comboFontSize" Width="50" IsEditable="True"
-                          DropDownClosed="ComboFontSize_DropDownClosed" KeyUp="ComboFontSize_KeyUp"
-                          Text="14">
+                <ComboBox x:Name="comboFontSize" Width="50"
+                          DropDownClosed="ComboFontSize_DropDownClosed" KeyUp="ComboFontSize_KeyUp">
                     <ComboBoxItem Content="10"/>
                     <ComboBoxItem Content="12"/>
-                    <ComboBoxItem Content="14"/>
+                    <ComboBoxItem Content="14" IsSelected="True"/>
                     <ComboBoxItem Content="16"/>
                     <ComboBoxItem Content="18"/>
                     <ComboBoxItem Content="20"/>

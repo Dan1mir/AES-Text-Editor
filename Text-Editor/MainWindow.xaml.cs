@@ -37,6 +37,7 @@ namespace Text_Editor
                 Properties.Settings.Default.Started = true;
                 Properties.Settings.Default.Save();
             }
+            CheckMods();
         }
 
         private void generateNewKey_Click(object sender, RoutedEventArgs e)
@@ -340,15 +341,37 @@ namespace Text_Editor
 
         private void MenuLineNumbers_OnClick(object sender, RoutedEventArgs e)
         {
-            TxtBoxDoc.ShowLineNumbers = !TxtBoxDoc.ShowLineNumbers;
-            menuLineNumbers.IsChecked = TxtBoxDoc.ShowLineNumbers;
-            Properties.Settings.Default.LineNumbers = TxtBoxDoc.ShowLineNumbers;
+            TxtBoxDoc.ShowLineNumbers = !Properties.Settings.Default.LineNumbers;
+            Properties.Settings.Default.LineNumbers = !Properties.Settings.Default.LineNumbers;
+            menuLineNumbers.IsChecked = Properties.Settings.Default.LineNumbers;
+
             Properties.Settings.Default.Save();
         }
         private void MenuNightMode_OnClick(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.NightMode = !Properties.Settings.Default.NightMode;
+            menuNightMode.IsChecked = Properties.Settings.Default.NightMode;
+
+            ChangeTheme(Properties.Settings.Default.NightMode);
+
             Properties.Settings.Default.Save();
+        }
+
+        private void ChangeTheme(bool isNightMode)
+        {
+            var themeUri = isNightMode ? new Uri("Data\\Themes\\DarkTheme.xaml", UriKind.Relative) 
+                : new Uri("Data\\Themes\\LightTheme.xaml", UriKind.Relative);
+            ((App)Application.Current).ChangeTheme(themeUri);
+        }
+
+        private void CheckMods()
+        {
+            menuLineNumbers.IsChecked = Properties.Settings.Default.LineNumbers;
+            menuNightMode.IsChecked = Properties.Settings.Default.NightMode;
+
+            TxtBoxDoc.ShowLineNumbers = Properties.Settings.Default.LineNumbers;
+
+            ChangeTheme(Properties.Settings.Default.NightMode);
         }
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
         {
@@ -454,7 +477,7 @@ namespace Text_Editor
                 return;
             }
         }
-
+          
         static string ObfuscateString(string input)
         {
             StringBuilder obfuscated = new StringBuilder();
@@ -468,6 +491,21 @@ namespace Text_Editor
         static string DeobfuscateString(string input)
         {
             return ObfuscateString(input);
+        }
+
+        private void ToolBar_Loaded(object sender, RoutedEventArgs e)
+        {
+            ToolBar toolBar = sender as ToolBar;
+            var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
+            if (overflowGrid != null)
+            {
+                overflowGrid.Visibility = Visibility.Collapsed;
+            }
+            var mainPanelBorder = toolBar.Template.FindName("MainPanelBorder", toolBar) as FrameworkElement;
+            if (mainPanelBorder != null)
+            {
+                mainPanelBorder.Margin = new Thickness();
+            }
         }
     }
 }
