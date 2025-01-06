@@ -29,24 +29,61 @@ namespace Text_Editor
 
         public MainWindow()
         {
-            InitializeComponent();
-            if (!Properties.Settings.Default.Started)
+            try
             {
-                var aes = new AES();
-                var (key, iv) = aes.GenerateKeyIV();
+                InitializeComponent();
+                if (!Properties.Settings.Default.Started)
+                {
+                    GenerateAES();
 
-                var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
-                var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
-
-                string json = $"{{\"Key\":\"{Convert.ToBase64String(key)}\",\"IV\":\"{Convert.ToBase64String(iv)}\"}}";
-
-                byte[] encryptedJson = aes.Encrypt(json, encryptkey, encryptiv);
-
-                File.WriteAllBytes("aesKeyInfo.json", encryptedJson);
-                
-                Properties.Settings.Default.Started = true;
-                Properties.Settings.Default.Save();
+                    Properties.Settings.Default.Started = true;
+                    Properties.Settings.Default.Save();
+                }
+                CheckMods();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,"OH FUCK", MessageBoxButton.OK);
+            }
+
+        }
+
+        private void generateNewKey_Click(object sender, RoutedEventArgs e)
+        {
+            GenerateAES();
+        }
+
+        private void GenerateAES()
+        {
+            var aes = new AES();
+            var (key, iv) = aes.GenerateKeyIV();
+
+            var encryptkey = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.Key));
+            var encryptiv = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.IV));
+
+            string json = $"{{\"Key\":\"{Convert.ToBase64String(key)}\",\"IV\":\"{Convert.ToBase64String(iv)}\"}}";
+
+            byte[] encryptedJson = aes.Encrypt(json, encryptkey, encryptiv);
+
+            string fileName = GenerateUniqueFileName("aesKeyInfo", ".json");
+
+            File.WriteAllBytes(fileName, encryptedJson);
+
+            setEncryptKey(fileName);
+        }
+
+        string GenerateUniqueFileName(string baseFileName, string extension)
+        {
+            string fileName = $"{baseFileName}{extension}";
+            int fileIndex = 1;
+
+            while (File.Exists(fileName))
+            {
+                fileName = $"{baseFileName}({fileIndex}){extension}";
+                fileIndex++;
+            }
+
+            return fileName;
         }
 
         private void SaveBeforeClosing_Prompt()
@@ -165,8 +202,8 @@ namespace Text_Editor
             {
                 var aes = new AES();
 
-                var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
-                var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
+                var encryptkey = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.Key));
+                var encryptiv = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.IV));
 
                 var encryptedJson = File.ReadAllBytes(Properties.Settings.Default.aesEncryptPath);
                 var decryptedJson = aes.Decrypt(encryptedJson, encryptkey, encryptiv);
@@ -207,8 +244,8 @@ namespace Text_Editor
         {
             var aes = new AES();
 
-            var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
-            var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
+            var encryptkey = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.Key));
+            var encryptiv = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.IV));
 
             var encryptedJson = File.ReadAllBytes(Properties.Settings.Default.aesEncryptPath);
             var decryptedJson = aes.Decrypt(encryptedJson, encryptkey, encryptiv);
@@ -312,11 +349,38 @@ namespace Text_Editor
 
         private void MenuLineNumbers_OnClick(object sender, RoutedEventArgs e)
         {
-            TxtBoxDoc.ShowLineNumbers = !TxtBoxDoc.ShowLineNumbers;
-            menuLineNumbers.IsChecked = TxtBoxDoc.ShowLineNumbers;
-            Properties.Settings.Default.LineNumbers = TxtBoxDoc.ShowLineNumbers;
+            TxtBoxDoc.ShowLineNumbers = !Properties.Settings.Default.LineNumbers;
+            Properties.Settings.Default.LineNumbers = !Properties.Settings.Default.LineNumbers;
+            menuLineNumbers.IsChecked = Properties.Settings.Default.LineNumbers;
+
+            Properties.Settings.Default.Save();
+        }
+        private void MenuNightMode_OnClick(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.NightMode = !Properties.Settings.Default.NightMode;
+            menuNightMode.IsChecked = Properties.Settings.Default.NightMode;
+
+            ChangeTheme(Properties.Settings.Default.NightMode);
+
+            Properties.Settings.Default.Save();
         }
 
+        private void ChangeTheme(bool isNightMode)
+        {
+            var themeUri = isNightMode ? new Uri("Data\\Themes\\DarkTheme.xaml", UriKind.Relative) 
+                : new Uri("Data\\Themes\\LightTheme.xaml", UriKind.Relative);
+            ((App)Application.Current).ChangeTheme(themeUri);
+        }
+
+        private void CheckMods()
+        {
+            menuLineNumbers.IsChecked = Properties.Settings.Default.LineNumbers;
+            menuNightMode.IsChecked = Properties.Settings.Default.NightMode;
+
+            TxtBoxDoc.ShowLineNumbers = Properties.Settings.Default.LineNumbers;
+
+            ChangeTheme(Properties.Settings.Default.NightMode);
+        }
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
         {
             SaveBeforeClosing_Prompt();
@@ -356,12 +420,6 @@ namespace Text_Editor
         {
             e.CanExecute = true;
         }
-
-        private void MenuNightMode_OnClick(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.NightMode = !Properties.Settings.Default.NightMode;
-        }
-
         private void TxtBoxDoc_Drop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -412,19 +470,50 @@ namespace Text_Editor
             {
                 var aes = new AES();
 
-                var encryptkey = Convert.FromBase64String(Properties.Settings.Default.Key);
-                var encryptiv = Convert.FromBase64String(Properties.Settings.Default.IV);
+                var encryptkey = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.Key));
+                var encryptiv = Convert.FromBase64String(DeobfuscateString(Properties.Settings.Default.IV));
 
                 var encryptedJson = File.ReadAllBytes(Properties.Settings.Default.aesEncryptPath);
                 var decryptedJson = aes.Decrypt(encryptedJson, encryptkey, encryptiv);
+                Properties.Settings.Default.Save();
             }
             catch (Exception)
             {
                 MessageBox.Show("File open error. Maybe it's not an AES key file?", "AES Key Error", MessageBoxButton.OK);
                 Properties.Settings.Default.aesEncryptPath = "aesKeyInfo.json";
+                Properties.Settings.Default.Save();
                 return;
             }
         }
+          
+        static string ObfuscateString(string input)
+        {
+            StringBuilder obfuscated = new StringBuilder();
+            foreach (char c in input)
+            {
+                obfuscated.Append((char)(c ^ 0x55));
+            }
+            return obfuscated.ToString();
+        }
 
+        static string DeobfuscateString(string input)
+        {
+            return ObfuscateString(input);
+        }
+
+        private void ToolBar_Loaded(object sender, RoutedEventArgs e)
+        {
+            ToolBar toolBar = sender as ToolBar;
+            var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
+            if (overflowGrid != null)
+            {
+                overflowGrid.Visibility = Visibility.Collapsed;
+            }
+            var mainPanelBorder = toolBar.Template.FindName("MainPanelBorder", toolBar) as FrameworkElement;
+            if (mainPanelBorder != null)
+            {
+                mainPanelBorder.Margin = new Thickness();
+            }
+        }
     }
 }

@@ -16,6 +16,6 @@
                 TextWrapping="Wrap" 
                 FontSize="14"/>
         </StackPanel>
-        <Label Content="Ver 0.1a" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15"/>
+        <Label Content="Ver 0.1.1a" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15"/>
     </Grid>
 </Window>
