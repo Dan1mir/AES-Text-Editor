@@ -12,10 +12,10 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Key" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">;`l"&lt;a&#xF;a&#x18;m&#x2;e&#x2;0&#x3;6:`:&#x4;f&#xC;?&#x7;`&#x11;`9&#x4;m&#x4;2&#x7;/`'&#x1E;-'?&#x10;h</Value>
+      <Value Profile="(Default)">"$38%2&#x17;-&amp;l&#x1F;&#x19;%&gt;&#x5;&#x1E;&#x1A;&#x10;&#x6;&#x14;c&#x17;a&#x7;:&#xF;&#x1B;&amp;&#x11;;?8&#x5;6&#xF;1=&#x19;gf-&#x1F;&#x1C;h</Value>
     </Setting>
     <Setting Name="IV" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">=9&#xC;&#x11;&#x14;g&#x5; &#x1E;&#x5; </Value>
+      <Value Profile="(Default)">3&#x19;1-&#x3;!,&#xF;&lt;&amp;&#x16;%&amp;8g$ az&#x3;&#x4;"hh</Value>
     </Setting>
     <Setting Name="aesEncryptPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">aesKeyInfo.json</Value>

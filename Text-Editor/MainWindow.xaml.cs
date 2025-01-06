@@ -29,15 +29,23 @@ namespace Text_Editor
 
         public MainWindow()
         {
-            InitializeComponent();
-            if (!Properties.Settings.Default.Started)
+            try
             {
-                GenerateAES();
+                InitializeComponent();
+                if (!Properties.Settings.Default.Started)
+                {
+                    GenerateAES();
 
-                Properties.Settings.Default.Started = true;
-                Properties.Settings.Default.Save();
+                    Properties.Settings.Default.Started = true;
+                    Properties.Settings.Default.Save();
+                }
+                CheckMods();
             }
-            CheckMods();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,"OH FUCK", MessageBoxButton.OK);
+            }
+
         }
 
         private void generateNewKey_Click(object sender, RoutedEventArgs e)

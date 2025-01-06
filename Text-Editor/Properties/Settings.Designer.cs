@@ -61,7 +61,7 @@ namespace Text_Editor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\r;`l\"<aame06:`:f?`\r`9m2/`\'-\'?h")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"$38%2-&l%>ca:&;?861=gf-h")]
         public string Key {
             get {
                 return ((string)(this["Key"]));
@@ -70,7 +70,7 @@ namespace Text_Editor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("=9g  ")]
+        [global::System.Configuration.DefaultSettingValueAttribute("31-!,<&%&8g$ az\"hh")]
         public string IV {
             get {
                 return ((string)(this["IV"]));
